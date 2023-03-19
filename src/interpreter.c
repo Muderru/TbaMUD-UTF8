@@ -489,8 +489,10 @@ void command_interpreter(struct char_data *ch, char *argument)
 
   /* special case to handle one-character, non-alphanumeric commands; requested
    * by many people so "'hi" or ";godnet test" is possible. Patch sent by Eric
-   * Green and Stefan Wasilewski. */
-  if (!isalpha(*argument)) {
+   * Green and Stefan Wasilewski. 
+   https://tbamud.com/forum/4-development/5486-crash-in-command-interpreter-with-part-of-unicode-characters */
+  const char *specialSingleChars = "*';";
+  if (strchr(specialSingleChars, *argument) != NULL) {
     arg[0] = argument[0];
     arg[1] = '\0';
     line = argument + 1;
@@ -814,7 +816,7 @@ int is_number(const char *str)
 /* Function to skip over the leading spaces of a string. */
 void skip_spaces(char **string)
 {
-  for (; **string && **string != '\t' && isspace(**string); (*string)++);
+  for (; **string && **string != '\t' && **string == ' '; (*string)++);
 }
 
 /* Given a string, change all instances of double dollar signs ($$) to single
